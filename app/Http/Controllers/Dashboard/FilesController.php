@@ -94,7 +94,7 @@ class FilesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'video' => 'required|mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4|max:10240000',
+            'video' => 'required',
             'directory_id' => 'nullable'
         ]);
 

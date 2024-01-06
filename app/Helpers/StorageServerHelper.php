@@ -47,11 +47,8 @@ class StorageServerHelper
 
     public static function getActiveKey()
     {
-        try {
-            return self::getActive()->name;
-        } catch (Exception $e) {
-            throw new Exception('Server Default Not Found.');
-        }
+        return self::getActive()->name;
+       
     }
     public static function getActiveName()
     {

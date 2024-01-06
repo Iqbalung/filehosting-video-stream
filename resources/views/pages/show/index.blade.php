@@ -1,13 +1,4 @@
 <x-guest-layout title="Download File">
-    <div class="mb-3 mt-5">
-        <div class="columns">
-            <div class="column is-6 is-offset-3">
-                <div class="box">
-                    <iframe src="{{ route('embed-show', $file->code) }}" width="100%" height="310px"></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="hero is-primary is-vcentered has-text-centered">
         <div class="hero-body">
             <div class="container">
@@ -44,12 +35,6 @@
                             <a>
                                 <span class="icon is-small"><i class="fas fa-film" aria-hidden="true"></i></span>
                                 <span>HTML</span>
-                            </a>
-                        </li>
-                        <li :class="{ 'is-active': tab === 'embed' }" @click="tab = 'embed'">
-                            <a>
-                                <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true"></i></span>
-                                <span>Embed Code</span>
                             </a>
                         </li>
                     </ul>

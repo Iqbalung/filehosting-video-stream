@@ -3,14 +3,10 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    FHV Stream
+                    File Sharing
                 </h1>
-                <h2 class="subtitle is-lowercase">
-                    SHARE ANY VIDEO ONLINE, and share to your friend
-                </h2>
                 <div class="buttons is-centered">
                     <a href="{{ route('login') }}" class="button is-primary is-rounded is-inverted">Login</a>
-                    <a href="{{ route('register') }}" class="button is-light is-rounded is-inverted">Sign Up</a>
                 </div>
             </div>
         </div>

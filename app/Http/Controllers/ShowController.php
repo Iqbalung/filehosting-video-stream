@@ -30,7 +30,7 @@ class ShowController extends Controller
         $file = File::where('code', $code)
             ->where('path', Crypt::decrypt($path))
             ->firstOrFail();
-
+        //dd($file->path,$file->storageServer->name);
         return Storage::disk($file->storageServer->name)
             ->download($file->path, config('app.name') . '-' . $file->client_original_name);
     }

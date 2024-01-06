@@ -24,10 +24,6 @@ class StorageServerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        StorageServer::all()->each(function (StorageServer $storageServer) {
-            $this->app['config']["filesystems.disks.{$storageServer->name}"] = collect(
-                json_decode($storageServer->config)
-            )->toArray();
-        });
+        return  $this->app['config']["filesystems.disks.local"];
     }
 }

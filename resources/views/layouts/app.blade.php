@@ -51,6 +51,7 @@
                     <a class="navbar-item" href="{{ route('dashboard.files.index') }}">
                         My Files
                     </a>
+                    <a href="{{ route('register') }}" class="navbar-item">Sign Up</a>
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-item">
                             <div class="icon">

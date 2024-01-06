@@ -41,7 +41,14 @@ return [
     |
     */
 
+   
+
     'disks' => [
+
+        'new' => [
+            'driver' => 'local',
+            'root' => storage_path('app'),
+        ],
 
         'local' => [
             'driver' => 'local',

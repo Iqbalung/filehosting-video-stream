@@ -45,9 +45,10 @@
                     <div class="buttons is-centered">
                         @auth
                             <a href="{{ route('dashboard.index') }}" class="button is-primary is-rounded">Dashboard</a>
+                            <a href="{{ route('register') }}" class="button is-light is-rounded is-inverted">Sign Up</a>
                         @else
                             <a href="{{ route('login') }}" class="button is-primary is-rounded">Login</a>
-                            <a href="{{ route('register') }}" class="button is-light is-rounded is-inverted">Sign Up</a>
+
                         @endauth
                     </div>
                 </div>

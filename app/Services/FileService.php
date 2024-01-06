@@ -21,21 +21,19 @@ class FileService implements FileServiceInterface
         if ($request->hasFile('video')) {
             $file = $request->file('video');
 
-            $randomString = Str::random(15);
-            $randomCode = Str::random(15);
-            $random = $randomString . '-=-' . $randomCode . '-=-' . time();
-            $randomHash = md5($random);
+            $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstvwxyzABCDEFGHIJKLMNOPQRSTVWXYZ"), 0, 8);;
+            $randomHash = $random;
 
             $filename = $random . '.' . $file->getClientOriginalExtension();
             $fileStore = $file->storeAs(
-                'videos', $filename, StorageServerHelper::getActiveKey()
+                'videos', $filename
             );
 
             $fileDatabase = File::create([
                 'user_id' => Auth::id(),
                 'directory_id' => $directoryID,
                 'storage_server_id' => StorageServerHelper::getActiveID(),
-                'code' => $randomHash . '-' . time(),
+                'code' => $randomHash,
                 'client_original_name' => $file->getClientOriginalName(),
                 'client_original_mime_type' => $file->getClientMimeType(),
                 'client_original_extension' => $file->getClientOriginalExtension(),
