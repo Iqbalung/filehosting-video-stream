@@ -7,6 +7,7 @@ use App\Models\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FileService implements FileServiceInterface
 {
@@ -25,10 +26,8 @@ class FileService implements FileServiceInterface
             $randomHash = $random;
 
             $filename = $random . '.' . $file->getClientOriginalExtension();
-            $fileStore = $file->storeAs(
-                'videos', $filename
-            );
-
+            $fileStore = $file->store('video', 's3');
+            
             $fileDatabase = File::create([
                 'user_id' => Auth::id(),
                 'directory_id' => $directoryID,

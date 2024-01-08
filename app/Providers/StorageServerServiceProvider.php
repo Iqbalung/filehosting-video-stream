@@ -24,6 +24,6 @@ class StorageServerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        return  $this->app['config']["filesystems.disks.local"];
+        return  $this->app['config']["filesystems.disks.s3"];
     }
 }
