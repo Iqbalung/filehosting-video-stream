@@ -26,7 +26,7 @@
         <div class="navbar-brand">
             <a class="navbar-item" href="/">
                 <h1 class="title is-4 has-text-primary is-uppercase">
-                    <svg width="20" height="20" id="face-i-d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8,21H4a1,1,0,0,1-1-1V16" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path><path d="M16,21h4a1,1,0,0,0,1-1V16" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path><path d="M3,16v4a1,1,0,0,0,1,1H8" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path><path d="M3,8V4A1,1,0,0,1,4,3H8" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path><path d="M21,8V4a1,1,0,0,0-1-1H16" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path><path d="M12,7v3c0,1,0,3-2,3M8,9V7m8,2V7M8,16a6.08,6.08,0,0,0,8,0" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path></svg>
+                <img src="https://sin1.contabostorage.com/833352dc474e43209813e72560512fa1:public/imgku_logo.png" />
                     <span class="has-text-dark">{{ config('app.name') }}</span>
                 </h1>
             </a>
@@ -93,7 +93,7 @@
 <footer class="footer">
     <div class="content has-text-centered">
         <p>
-            &copy; 2020 - {{ config('app.name') }}
+            &copy; 2024 - {{ config('app.name') }}
         </p>
     </div>
 </footer>

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="has-navbar-fixed-top">
     <head>
         <link rel="icon" type="image/x-icon" href="https://sin1.contabostorage.com/833352dc474e43209813e72560512fa1:public/favicon_imgku.png">
@@ -95,7 +96,7 @@
     <footer class="footer">
         <div class="content has-text-centered">
             <p>
-                &copy; 2020 - {{ config('app.name') }}
+                &copy; 2024 - {{ config('app.name') }}
             </p>
         </div>
     </footer>
