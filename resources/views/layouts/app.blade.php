@@ -47,7 +47,7 @@
                         Dashboard
                     </a>
                     <a class="navbar-item" href="{{ route('dashboard.files.create') }}">
-                        Upload Video
+                        Upload File
                     </a>
                     <a class="navbar-item" href="{{ route('dashboard.files.index') }}">
                         My Files
