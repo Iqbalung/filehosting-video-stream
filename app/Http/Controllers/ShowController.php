@@ -17,6 +17,12 @@ class ShowController extends Controller
         return view('pages.show.index', compact('file'));
     }
 
+    public function register_new()
+    {
+        
+        return view('auth.register');
+    }
+
     public function download($code)
     {
         $file = File::where('code', $code)->firstOrFail();

@@ -6,7 +6,7 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
                         <div class="field">
-                            <label for="" class="label">{{ __('Name') }}</label>
+                            <label for="" class="label">{{ __('Name') }} 2</label>
                             <div class="control">
                                 <input class="input" type="text" placeholder="name" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" />
                             </div>
