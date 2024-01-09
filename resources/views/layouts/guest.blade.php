@@ -27,7 +27,6 @@
             <a class="navbar-item" href="/">
                 <h1 class="title is-4 has-text-primary is-uppercase">
                 <img src="https://sin1.contabostorage.com/833352dc474e43209813e72560512fa1:public/imgku_logo.png" />
-                    <span class="has-text-dark">{{ config('app.name') }}</span>
                 </h1>
             </a>
 
