@@ -89,6 +89,7 @@
                         <th>Size</th>
                         <th>View</th>
                         <th>Download</th>
+                        <th>link</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -106,6 +107,7 @@
                             <td>{{ $file->size_format }}</td>
                             <td>0</td>
                             <td>0</td>
+                            <td>http:://imgku.io/show/{{ $file->code }}</td>
                             <td>
                                 <livewire:dashboard.file-button :file="$file"/>
                             </td>
