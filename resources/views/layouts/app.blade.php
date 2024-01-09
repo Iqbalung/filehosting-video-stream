@@ -52,7 +52,7 @@
                     <a class="navbar-item" href="{{ route('dashboard.files.index') }}">
                         My Files
                     </a>
-                    <a href="{{ route('register-new') }}" class="navbar-item">Add User/a>
+                    <a href="{{ route('register-new') }}" class="navbar-item">Add User</a>
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-item">
                             <div class="icon">
