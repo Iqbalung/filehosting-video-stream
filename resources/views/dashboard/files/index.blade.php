@@ -108,7 +108,7 @@
                             <td>0</td>
                             <td>0</td>
                             <td>
-                            <input type="text" value="http://imgku.io/show/{{ $file->code }}" id="myInput">   
+                            <input type="text" value="http://imgku.io/view/{{ $file->code }}" id="myInput">   
                             <button onclick="myFunction(`{{ $file->code }}`)">Copy text</button> 
                             </td>
                             <td>
@@ -130,12 +130,17 @@
         console.log(val)
   // Get the text field
   var copyText = document.getElementById("myInput");
-
+    
+  const unsecuredCopyToClipboard = (text) => { const document.body.appendChild(val);  try{document.execCommand('copy')}catch(err){console.error('Unable to copy to clipboard',err)}document.body.removeChild(val)};
   // Select the text field
   copyText.select();
   copyText.setSelectionRange(0, 99999); // For mobile devices
     setTimeout(() => {
-        window.navigator.clipboard.writeText(val);
+        if (window.isSecureContext && navigator.clipboard) {
+            navigator.clipboard.writeText(content);
+        } else {
+            unsecuredCopyToClipboard(content);
+        }
     }, 1000);
    // Copy the text inside the text field
 

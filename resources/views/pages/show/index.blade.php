@@ -43,7 +43,7 @@
                 <div x-show="tab === 'link'">
                     <div class="field">
                         <div class="control">
-                            <textarea class="textarea">{{ route('file-show', $file->code) }}</textarea>
+                            <textarea class="textarea">{{ route('file-download', $file->code) }}</textarea>
                         </div>
                     </div>
                 </div>

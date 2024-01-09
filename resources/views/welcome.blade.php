@@ -1,4 +1,4 @@
-<x-guest-layout title="FHV Stream">
+<x-guest-layout title="IMGKU">
     <section class="hero is-medium is-primary is-vcentered has-text-centered">
         <div class="hero-body">
             <div class="container">

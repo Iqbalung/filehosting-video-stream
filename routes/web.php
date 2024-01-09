@@ -32,6 +32,7 @@ Route::group([
     Route::get('/', DashboardController::class)->name('index');
 
     Route::resource('/files', FilesController::class);
+    Route::resource('/register', FilesController::class);
     Route::get('/directory', [DirectoryController::class, 'index'])->name('directory.index');
     Route::post('/directory', [DirectoryController::class, 'store'])->name('directory.store');
     Route::post('/directory/edit', [DirectoryController::class, 'edit'])->name('directory.edit');
@@ -41,7 +42,7 @@ Route::group([
 
 Route::get('/embed/{code}', [EmbedController::class, 'show'])->name('embed-show');
 Route::get('/show/{code}', [ShowController::class, 'show'])->name('file-show');
-Route::post('/show/{code}', [ShowController::class, 'download'])->name('file-download');
+Route::get('/view/{code}', [ShowController::class, 'download'])->name('file-download');
 Route::get('/storage-url', StorageUrlController::class)->name('storage-url');
 
 //
