@@ -125,7 +125,7 @@
         </div>
     </div>
 </x-app-layout>
-<script>
+<script type="text/javascript">
     function myFunction() {
   // Get the text field
   var copyText = document.getElementById("myInput");
