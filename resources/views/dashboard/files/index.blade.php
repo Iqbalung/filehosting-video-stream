@@ -107,7 +107,10 @@
                             <td>{{ $file->size_format }}</td>
                             <td>0</td>
                             <td>0</td>
-                            <td>http:://imgku.io/show/{{ $file->code }}</td>
+                            <td>
+                            <input type="text" value="http://imgku.io/show/{{ $file->code }}" id="myInput">   
+                            <button onclick="myFunction()">Copy text</button> 
+                            </td>
                             <td>
                                 <livewire:dashboard.file-button :file="$file"/>
                             </td>
@@ -122,3 +125,19 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+    function myFunction() {
+  // Get the text field
+  var copyText = document.getElementById("myInput");
+
+  // Select the text field
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); // For mobile devices
+
+   // Copy the text inside the text field
+  navigator.clipboard.writeText(copyText.value);
+
+  // Alert the copied text
+  alert("Copied the text: " + copyText.value);
+}
+</script>
