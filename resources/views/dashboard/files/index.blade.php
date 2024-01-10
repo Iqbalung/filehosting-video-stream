@@ -108,7 +108,7 @@
                             <td>0</td>
                             <td>0</td>
                             <td>
-                            <input type="text" value="http://imgku.io/view/{{ $file->code }}" id="myInput">   
+                            <input type="text" value="https://imgku.io/view/{{ $file->code }}" id="myInput">   
                             <button onclick="myFunction(`{{ $file->code }}`)">Copy text</button> 
                             </td>
                             <td>
