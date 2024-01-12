@@ -26,7 +26,7 @@ class FileService implements FileServiceInterface
             $randomHash = $random;
 
             $filename = $random . '.' . $file->getClientOriginalExtension();
-            $fileStore = $file->store('video', 's3');
+            $fileStore = $file->storeAs('video',$filename, 's3');
             
             $fileDatabase = File::create([
                 'user_id' => Auth::id(),
