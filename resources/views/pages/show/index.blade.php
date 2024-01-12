@@ -43,7 +43,7 @@
                 <div x-show="tab === 'link'">
                     <div class="field">
                         <div class="control">
-                            <textarea class="textarea">{{ route('file-download', $file->code) }}</textarea>
+                            <textarea class="textarea">https://imgku.io/download/{{ $file->name }}</textarea>
                         </div>
                     </div>
                 </div>
