@@ -108,8 +108,7 @@
                             <td>0</td>
                             <td>0</td>
                             <td>
-                            <a href="https://imgku.io/download/{{ $file->name }}">Open </a>   
-                            <button onclick="myFunction(`{{ $file->code }}`)">Copy text</button> 
+                            <a href="https://imgku.io/download/{{ $file->name }}">Open </a> 
                             </td>
                             <td>
                                 <livewire:dashboard.file-button :file="$file"/>
