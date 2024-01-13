@@ -109,7 +109,7 @@
                             <td>0</td>
                             <td>
                             <a href="https://imgku.io/download/{{ $file->name }}">https://imgku.io/download/{{ $file->name }} </a> 
-                            <a href="https://imgku.io/download/{{ $file->name }}">Open </a> 
+                            <a class="button is-primary" href="https://imgku.io/download/{{ $file->name }}">Open </a> 
                             </td>
                             <td>
                                 <livewire:dashboard.file-button :file="$file"/>
