@@ -108,6 +108,7 @@
                             <td>0</td>
                             <td>0</td>
                             <td>
+                            <a href="https://imgku.io/download/{{ $file->name }}">https://imgku.io/download/{{ $file->name }} </a> 
                             <a href="https://imgku.io/download/{{ $file->name }}">Open </a> 
                             </td>
                             <td>
