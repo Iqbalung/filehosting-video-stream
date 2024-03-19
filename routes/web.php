@@ -45,6 +45,7 @@ Route::get('/show/{code}', [ShowController::class, 'show'])->name('file-show');
 Route::get('/view/{code}', [ShowController::class, 'download'])->name('file-download');
 Route::get('/storage-url', StorageUrlController::class)->name('storage-url');
 Route::get('/register-new', [ShowController::class,'register_new'])->name('register-new');
+Route::get('/delete/{id}', [FilesController::class,'delete'])->name('delete');
 
 //
 //Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {

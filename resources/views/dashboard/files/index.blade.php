@@ -71,13 +71,6 @@
         </div>
         <div class="column">
             <div class="field">
-                <div class="buttons has-addons">
-                    <input name="button_delete" class="button is-danger" type="submit" value="Delete Files"/>
-                    <input name="button_move" class="button is-warning" type="submit" value="Move Files"/>
-                    <input name="button_embed_code" class="button is-primary" type="submit" value="Get Embed Code "/>
-                </div>
-            </div>
-            <div class="field">
                 <label class="label">All Files in Directory {{ $directoryName }}</label>
             </div>
             <div class="table-container">
@@ -108,11 +101,12 @@
                             <td>0</td>
                             <td>0</td>
                             <td>
-                            <a href="https://imgku.io/download/{{ $file->name }}">https://imgku.io/download/{{ $file->name }} </a> 
-                            <a class="button is-primary" href="https://imgku.io/download/{{ $file->name }}">Open </a> 
+                            <a href="{{ env('APP_URL') }}/download/{{ $file->name }}">{{ env('APP_URL') }}/download/{{ $file->name }} </a> 
+                            <a class="button is-primary" href="{{ env('APP_URL') }}/download/{{ $file->name }}">Open </a> 
                             </td>
                             <td>
                                 <livewire:dashboard.file-button :file="$file"/>
+                                <a  href="{{ env('APP_URL') }}/delete/{{ $file->id }}" class="button is-small is-danger">Delete</a>
                             </td>
                         </tr>
                     @endforeach

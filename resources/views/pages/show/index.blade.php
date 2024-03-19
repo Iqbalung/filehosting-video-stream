@@ -8,7 +8,7 @@
                 <h2 class="subtitle is-capitalized">
                     Size: {{ $file->size_format }} <span class="has-text-weight-bold">.</span> Mime Type: {{ $file->mime_type }}
                 </h2>
-                <form action="https://imgku.io/download/{{ $file->name }}" method="GET">
+                <form action="{{ env('APP_URL') }}/download/{{ $file->name }}" method="GET">
                     @csrf
                     <input type="hidden" name="code" value="{{ $file->code }}">
                     <input type="hidden" name="hash" value="{{ $file->path_hash }}">
@@ -43,7 +43,7 @@
                 <div x-show="tab === 'link'">
                     <div class="field">
                         <div class="control">
-                            <textarea class="textarea">https://imgku.io/download/{{ $file->name }}</textarea>
+                            <textarea class="textarea">{{ env('APP_URL') }}/download/{{ $file->name }}</textarea>
                         </div>
                     </div>
                 </div>

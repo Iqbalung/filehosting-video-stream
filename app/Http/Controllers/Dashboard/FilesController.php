@@ -148,8 +148,12 @@ class FilesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        $id = explode(',', $id);
+        File::whereIn('id',$id)->delete();
+        return redirect()
+            ->route('dashboard.files.index')
+            ->with('success', 'Berhasil Hapus');
     }
 }
