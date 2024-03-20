@@ -79,6 +79,7 @@
                     <thead>
                     <tr>
                         <th>#</th>
+                        <th>Image</th>
                         <th>Title</th>
                         <th>Size</th>
                         <th>View</th>
@@ -97,9 +98,14 @@
                                     <input type="checkbox">
                                 </label>
                             </td>
+                            <td>
+                                <figure class="image is-48x48">
+                                    <img src="{{ $file->thumbnail }}" alt="{{ $file->client_original_name }}">
+                                </figure>
+                            </td>
                             <td><a href="{{ route('file-show', $file->code) }}">{{ $file->client_original_name }}</a>
                             <br>
-                            <img src="{{ env('APP_URL') }}/download/{{ $file->name }}" alt="{{ $file->name }}" style="width: 50px; height: 50px;">
+                            
                             </td>
                             <td>{{ $file->size_format }}</td>
                             <td>0</td>
