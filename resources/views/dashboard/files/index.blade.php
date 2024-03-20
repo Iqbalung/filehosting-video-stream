@@ -1,3 +1,4 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <x-app-layout title="My Files">
     <x-slot name="header">
         <h2 class="title is-2">
@@ -48,12 +49,12 @@
                         </a>
                     @endif
                     @foreach ($directories as $directory)
-                        <a href="{{ route('dashboard.files.index', ['folder_id' => $directory->id]) }}" class="panel-block">
-                            <label class="checkbox">
-                                <input type="checkbox" name="directories[]" value="{{ $directory->id }}">
-                                {{ $directory->name }}
-                            </label>
-                        </a>
+                    <a href="{{ route('dashboard.files.index', ['folder_id' => $directory->id]) }}" class="panel-block">
+                        <label class="checkbox">
+                        <input type="checkbox" name="directories[]" value="{{ $directory->id }}" {{ in_array($directory->id, explode(',', request()->get('folder_id'))) ? 'checked' : '' }}>
+                            {{ $directory->name }}
+                        </label>
+                    </a>
                     @endforeach
 
                     <div class="panel-block">
@@ -120,25 +121,22 @@
     </div>
 </x-app-layout>
 <script type="text/javascript">
-    function myFunction(val) {
-        console.log(val)
-  // Get the text field
-  var copyText = document.getElementById("myInput");
-    
-  const unsecuredCopyToClipboard = (text) => { const document.body.appendChild(val);  try{document.execCommand('copy')}catch(err){console.error('Unable to copy to clipboard',err)}document.body.removeChild(val)};
-  // Select the text field
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); // For mobile devices
-    setTimeout(() => {
-        if (window.isSecureContext && navigator.clipboard) {
-            navigator.clipboard.writeText(content);
-        } else {
-            unsecuredCopyToClipboard(content);
-        }
-    }, 1000);
-   // Copy the text inside the text field
+   
+$(document).ready(function(){
+  $('input[type="checkbox"][name="directories[]"]').click(function(){
+    console.log('clicked');
+   
+      var id = $(this).val();
 
-  // Alert the copied text
-  //alert("Copied the text: " + copyText.value);
-}
+        var checkedValues = $('input[type="checkbox"][name="directories[]"]:checked').map(function() {
+            return this.value;
+        }).get();
+
+        var checkedValuesString = checkedValues.join(',');
+        window.location.href = window.location.href.split('?')[0] + '?folder_id=' + checkedValuesString;
+    
+  });
+});
+
+
 </script>

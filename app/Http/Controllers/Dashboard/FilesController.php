@@ -40,7 +40,7 @@ class FilesController extends Controller
         $parrentDirectory = 0;
         $directoryName = '...';
 
-        if ($request->has('folder_id')) {
+        if ($request->has('folder_id') && $request->query('folder_id') != null) {
             $directory = Directory::select('directory_parrent_id', 'name')
                 ->where('user_id', Auth::id())
                 ->where('id', $request->query('folder_id'))
@@ -50,8 +50,8 @@ class FilesController extends Controller
             $parrentDirectory = $directory
                 ->directory_parrent_id;
 
-            $directories = $directories->where('directory_parrent_id', $request->query('folder_id'));
-            $files = $files->where('directory_id', $request->query('folder_id'));
+            $folder_id = explode(',', $request->query('folder_id'));
+            $files = $files->whereIn('directory_id', $folder_id);
         } else {
             $directories = $directories->where('directory_parrent_id', null);
         }
