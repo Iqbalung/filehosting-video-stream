@@ -100,7 +100,7 @@
                             </td>
                             <td>
                                 <figure class="image is-48x48">
-                                    <img src="{{ $file->thumbnail }}" alt="{{ $file->client_original_name }}">
+                                <img src="{{ env('APP_URL') }}/download/{{ $file->name }}" alt="{{ $file->name }}" style="width: 50px; height: 50px;">
                                 </figure>
                             </td>
                             <td><a href="{{ route('file-show', $file->code) }}">{{ $file->client_original_name }}</a>
