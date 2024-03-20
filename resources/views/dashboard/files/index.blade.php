@@ -97,7 +97,10 @@
                                     <input type="checkbox">
                                 </label>
                             </td>
-                            <td><a href="{{ route('file-show', $file->code) }}">{{ $file->client_original_name }}</a></td>
+                            <td><a href="{{ route('file-show', $file->code) }}">{{ $file->client_original_name }}</a>
+                            <br>
+                            <img src="{{ env('APP_URL') }}/download/{{ $file->name }}" alt="{{ $file->name }}" style="width: 50px; height: 50px;">
+                            </td>
                             <td>{{ $file->size_format }}</td>
                             <td>0</td>
                             <td>0</td>
