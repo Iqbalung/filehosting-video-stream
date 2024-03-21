@@ -21,8 +21,9 @@
         <form method="POST" enctype="multipart/form-data" action="{{ route('dashboard.files.store') }}">
             @csrf
             <div class="field">
-                <label for="" class="label">Select Video</label>
-                <input name="video" type="file" class="control" style="border: dashed teal 2px; padding: 30px 30px 30px 30px !important; border-radius: 1%">
+                <label for="" class="label">Pilih 1 atau beberapa file sekaligus</label>
+                <input id="video" name="video[]" type="file" class="control" style="border: dashed teal 2px; padding: 30px 30px 30px 30px !important; border-radius: 1%" multiple>
+                <div id="fileInfo">tes</div>
             </div>
             <div class="field">
                 <div class="control">
@@ -47,3 +48,16 @@
     </div>
 
 </x-app-layout>
+<script>
+document.getElementById('video').addEventListener('change', function() {
+  var output = '';
+  for (var i = 0; i < this.files.length; i++) {
+    var file = this.files[i];
+    output += '<p>File name ' + (i+1) + ': ' + file.name + '</p>';
+    output += '<p>File size ' + (i+1) + ': ' + file.size + ' bytes</p>';
+    output += '<p>File type ' + (i+1) + ': ' + file.type + '</p>';
+    output += '<hr>';
+  }
+  document.getElementById('fileInfo').innerHTML = output;
+});
+</script>

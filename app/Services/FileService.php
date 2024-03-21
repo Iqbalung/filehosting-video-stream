@@ -19,31 +19,37 @@ class FileService implements FileServiceInterface
      */
     public function store(Request $request, $directoryID)
     {
-        if ($request->hasFile('video')) {
-            $file = $request->file('video');
+        if($request->hasfile('video'))
+        {
+            $fileDatabases = [];
 
-            $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstvwxyzABCDEFGHIJKLMNOPQRSTVWXYZ"), 0, 8);;
-            $randomHash = $random;
+            foreach($request->file('video') as $file)
+            {
+                $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstvwxyzABCDEFGHIJKLMNOPQRSTVWXYZ"), 0, 8);
+                $randomHash = $random;
 
-            $filename = $random . '.' . $file->getClientOriginalExtension();
-            $fileStore = $file->storeAs('video',$filename, 's3');
-            
-            $fileDatabase = File::create([
-                'user_id' => Auth::id(),
-                'directory_id' => $directoryID,
-                'storage_server_id' => StorageServerHelper::getActiveID(),
-                'code' => $randomHash,
-                'client_original_name' => $file->getClientOriginalName(),
-                'client_original_mime_type' => $file->getClientMimeType(),
-                'client_original_extension' => $file->getClientOriginalExtension(),
-                'name' => $filename,
-                'mime_type' => $file->getMimeType(),
-                'extension' => $file->extension(),
-                'path' => $fileStore,
-                'size' => $file->getSize(),
-            ]);
+                $filename = $random . '.' . $file->getClientOriginalExtension();
+                $fileStore = $file->storeAs('video',$filename, 's3');
 
-            return $fileDatabase;
+                $fileDatabase = File::create([
+                    'user_id' => Auth::id(),
+                    'directory_id' => $directoryID,
+                    'storage_server_id' => StorageServerHelper::getActiveID(),
+                    'code' => $randomHash,
+                    'client_original_name' => $file->getClientOriginalName(),
+                    'client_original_mime_type' => $file->getClientMimeType(),
+                    'client_original_extension' => $file->getClientOriginalExtension(),
+                    'name' => $filename,
+                    'mime_type' => $file->getMimeType(),
+                    'extension' => $file->extension(),
+                    'path' => $fileStore,
+                    'size' => $file->getSize(),
+                ]);
+
+                $fileDatabases[] = $fileDatabase;
+            }
+
+            return $fileDatabases;
         }
     }
 
