@@ -1,4 +1,5 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <x-app-layout title="My Files">
     <x-slot name="header">
         <h2 class="title is-2">
@@ -71,9 +72,19 @@
             </nav>
         </div>
         <div class="column">
-            <div class="field">
-                <label class="label">All Files in Directory {{ $directoryName }}</label>
+        <div class="field">
+        <div class="input-group mb-8">
+            <div class="input-group-prepend">
+                <input type="text" style="width:700px" class="form-control" placeholder="Cari" list="list-timezone" id="input-datalist" value="{{ request()->get('search') }}" >
             </div>
+            <div class="input-group-append">
+            <button id="SearchButton" class="btn btn-primary" type="button">Cari</button>    
+            <button id="clearButton" class="btn btn-danger" type="button">x</button>
+                
+            </div>
+            <div id="fileList"></div>
+        </div>
+            
             <div class="table-container">
                 <table class="table is-fullwidth">
                     <thead>
@@ -130,7 +141,7 @@
     </div>
 </x-app-layout>
 <script type="text/javascript">
-   
+   var APP_URL = "{{ env('APP_URL') }}";
 $(document).ready(function(){
   $('input[type="checkbox"][name="directories[]"]').click(function(){
     console.log('clicked');
@@ -145,7 +156,38 @@ $(document).ready(function(){
         window.location.href = window.location.href.split('?')[0] + '?folder_id=' + checkedValuesString;
     
   });
+  $('#input-datalist').on('keyup',function(){
+    var query = $(this).val();
+    $.ajax({
+      url:  APP_URL + "/search",
+      method:"GET",
+      data:{query:query},
+      success:function(data){
+        console.log(data);
+        $('#fileList').append(data);
+      }
+    })
+  });
+
+  document.getElementById('input-datalist').addEventListener('keypress', function(event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        window.location.href = '?search=' + this.value;
+    }
 });
 
+document.getElementById('SearchButton').addEventListener('click', function(event) {
+    
+        window.location.href = '?search=' + $('#input-datalist').val();
+    
+});
+
+
+});
+
+document.getElementById('clearButton').addEventListener('click', function() {
+    document.getElementById('input-datalist').value = '';
+    window.location.href = '?search=';
+});
 
 </script>

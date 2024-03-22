@@ -58,9 +58,11 @@ class FilesController extends Controller
 
         $files = $files
             ->where('user_id', Auth::id())
-            ->where('name', 'like', '%'. $request->query('search') .'%')
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->where('client_original_name', 'like', '%'. $request->query('search') .'%')
+            ->orderBy('id', 'desc');
+
+          
+            $files = $files->paginate(10);
 
         $directories = $directories
             ->where('user_id', Auth::id())
@@ -156,4 +158,20 @@ class FilesController extends Controller
             ->route('dashboard.files.index')
             ->with('success', 'Berhasil Hapus');
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->get('query');
+        $files = File::where('client_original_name', 'like', '%' . $search . '%')->OrWhere('code', 'like', '%' . $search . '%')->get();
+        $output = '<datalist id="list-timezone" >';
+        foreach($files as $file)
+        {
+            $output .= ' <option style="width:700px;">'.$file->client_original_name.'</option>';
+        }
+        $output .= '</datalist>';
+
+        return $output;
+    }
 }
+
+
