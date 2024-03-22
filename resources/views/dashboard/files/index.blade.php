@@ -75,7 +75,7 @@
         <div class="field">
         <div class="input-group mb-8">
             <div class="input-group-prepend">
-                <input type="text" style="width:700px" class="form-control" placeholder="Cari" list="list-timezone" id="input-datalist" value="{{ request()->get('search') }}" >
+                <input type="text" style="width:700px" class="form-control" placeholder="Cari" autocomplete="off" list="list-timezone" id="input-datalist" value="{{ request()->get('search') }}" >
             </div>
             <div class="input-group-append">
             <button id="SearchButton" class="btn btn-primary" type="button">Cari</button>    
@@ -143,6 +143,13 @@
 <script type="text/javascript">
    var APP_URL = "{{ env('APP_URL') }}";
 $(document).ready(function(){
+
+    var checkedValues = $('input[type="checkbox"][name="directories[]"]:checked').map(function() {
+            return this.value;
+        }).get();
+
+        var checkedValuesString = checkedValues.join(',');
+
   $('input[type="checkbox"][name="directories[]"]').click(function(){
     console.log('clicked');
    
@@ -161,10 +168,13 @@ $(document).ready(function(){
     $.ajax({
       url:  APP_URL + "/search",
       method:"GET",
-      data:{query:query},
+      cache: false,
+      data:{query:query, folder_id:checkedValuesString},
       success:function(data){
         console.log(data);
-        $('#fileList').append(data);
+        $data = '';
+        $('#datalist').html('');
+        $('#fileList').html(data);
       }
     })
   });
@@ -172,13 +182,15 @@ $(document).ready(function(){
   document.getElementById('input-datalist').addEventListener('keypress', function(event) {
     if (event.keyCode == 13) {
         event.preventDefault();
-        window.location.href = '?search=' + this.value;
+        window.location.href = '?search=' + this.value + '&folder_id=' + checkedValuesString;
     }
 });
 
 document.getElementById('SearchButton').addEventListener('click', function(event) {
     
-        window.location.href = '?search=' + $('#input-datalist').val();
+        window.location.href = '?search=' + $('#input-datalist').val(
+            
+        );
     
 });
 

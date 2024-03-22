@@ -162,7 +162,13 @@ class FilesController extends Controller
     public function search(Request $request)
     {
         $search = $request->get('query');
-        $files = File::where('client_original_name', 'like', '%' . $search . '%')->OrWhere('code', 'like', '%' . $search . '%')->get();
+        if(!empty($request->get('folder_id') != null))
+        {
+            $folder_id = explode(',', $request->get('folder_id'));
+            $files = $files = File::where('client_original_name', 'like', '%' . $search . '%')->whereIn('directory_id', $folder_id)->get();
+        }else{
+            $files = File::where('client_original_name', 'like', '%' . $search . '%')->OrWhere('code', 'like', '%' . $search . '%')->get();
+        }
         $output = '<datalist id="list-timezone" >';
         foreach($files as $file)
         {
