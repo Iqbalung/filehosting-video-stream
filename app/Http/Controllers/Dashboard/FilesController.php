@@ -165,9 +165,9 @@ class FilesController extends Controller
         if(!empty($request->get('folder_id') != null))
         {
             $folder_id = explode(',', $request->get('folder_id'));
-            $files = $files = File::where('client_original_name', 'like', '%' . $search . '%')->whereIn('directory_id', $folder_id)->get();
+            $files = $files = File::where('client_original_name', 'like', '%' . $search . '%')->whereIn('directory_id', $folder_id)->get()->take(10);
         }else{
-            $files = File::where('client_original_name', 'like', '%' . $search . '%')->OrWhere('code', 'like', '%' . $search . '%')->get();
+            $files = File::where('client_original_name', 'like', '%' . $search . '%')->OrWhere('code', 'like', '%' . $search . '%')->get()->take(10);
         }
         $output = '<datalist id="list-timezone" >';
         foreach($files as $file)
