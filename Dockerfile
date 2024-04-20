@@ -8,8 +8,6 @@ COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 
 WORKDIR /srv/app
 
-RUN sed -i -e 's/^zpost_max_size\s*=.*/post_max_size = 100M/' /etc/php/7.4/apache2/php.ini
-RUN sed -i -e 's/^upload_max_filesize\s*=.*/upload_max_filesize = 100M/' /etc/php/7.4/apache2/php.ini
 
 RUN a2enmod rewrite
 
