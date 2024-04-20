@@ -13,6 +13,12 @@ RUN a2enmod rewrite
 
 RUN a2enmod rewrite
 
+RUN cp /usr/src/php/php.ini-development /usr/src/php/php.ini && \
+    sed -i 's/upload_max_filesize = 200M/upload_max_filesize = 1280M/g' /usr/src/php/php.ini && \
+    sed -i 's/whatever_option = 1234/whatever_option = 4321/g' /usr/src/php/php.ini && \
+    sed -i -e 's/^zpost_max_size\s*=.*/post_max_size = 100M/' /usr/src/php/7.4/apache2/php.ini
+
+
 RUN apt-get update \
     && apt-get install -y libpq-dev \
     && docker-php-ext-install pgsql pdo_pgsql pdo \
@@ -20,10 +26,6 @@ RUN apt-get update \
     && docker-php-ext-enable pdo_mysql
 
 
-RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini && \
-    sed -i 's/upload_max_filesize = 200M/upload_max_filesize = 1280M/g' /usr/local/etc/php/php.ini && \
-    sed -i 's/whatever_option = 1234/whatever_option = 4321/g' /usr/local/etc/php/php.ini && \
-    sed -i -e 's/^zpost_max_size\s*=.*/post_max_size = 100M/' /etc/php/7.4/apache2/php.ini
 
 
 
