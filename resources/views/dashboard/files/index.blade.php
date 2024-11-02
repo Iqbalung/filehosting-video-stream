@@ -1,5 +1,8 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="https://cdn.datatables.net/v/bs4/jszip-3.10.1/dt-2.1.8/b-3.1.2/b-html5-3.1.2/b-print-3.1.2/datatables.min.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs4/jszip-3.10.1/dt-2.1.8/b-3.1.2/b-html5-3.1.2/b-print-3.1.2/datatables.min.js"></script>
+
 <x-app-layout title="My Files">
     <x-slot name="header">
         <h2 class="title is-2">
@@ -73,20 +76,29 @@
         </div>
         <div class="column">
         <div class="field">
-        <div class="input-group mb-8">
+        <div class="input-group mb-8" style="display: none">
             <div class="input-group-prepend">
                 <input type="text" style="width:700px" class="form-control" placeholder="Cari" autocomplete="off" list="list-timezone" id="input-datalist" value="{{ request()->get('search') }}" >
             </div>
             <div class="input-group-append">
-            <button id="SearchButton" class="btn btn-primary" type="button">Cari</button>    
+            <button id="SearchButton" class="btn btn-primary" type="button">Cari</button>
             <button id="clearButton" class="btn btn-danger" type="button">x</button>
-                
+
             </div>
             <div id="fileList"></div>
         </div>
-            
+
             <div class="table-container">
-                <table class="table is-fullwidth">
+                <!-- Option to switch wheter to show image or not -->
+                <div class="field">
+                    <div class="control">
+                        <label class="checkbox">
+                            <input type="checkbox" id="showImage" checked>
+                            Show Image
+                        </label>
+                    </div>
+                </div>
+                <table class="table is-fullwidth" id="dataTable">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -101,7 +113,7 @@
                     </thead>
                     <tbody>
 
-                    @foreach ($files as $file)
+                    <!-- @foreach ($files as $file)
 
                         <tr>
                             <td>
@@ -116,26 +128,26 @@
                             </td>
                             <td><a href="{{ route('file-show', $file->code) }}">{{ $file->client_original_name }}</a>
                             <br>
-                            
+
                             </td>
                             <td>{{ $file->size_format }}</td>
                             <td>0</td>
                             <td>0</td>
                             <td>
-                            <a href="{{ env('APP_URL') }}/download/{{ $file->name }}">{{ env('APP_URL') }}/download/{{ $file->name }} </a> 
-                            <a class="button is-primary" href="{{ env('APP_URL') }}/download/{{ $file->name }}">Open </a> 
+                            <a href="{{ env('APP_URL') }}/download/{{ $file->name }}">{{ env('APP_URL') }}/download/{{ $file->name }} </a>
+                            <a class="button is-primary" href="{{ env('APP_URL') }}/download/{{ $file->name }}">Open </a>
                             </td>
                             <td>
                                 <livewire:dashboard.file-button :file="$file"/>
                                 <a  href="{{ env('APP_URL') }}/delete/{{ $file->id }}" class="button is-small is-danger">Delete</a>
                             </td>
                         </tr>
-                    @endforeach
+                    @endforeach -->
                     </tbody>
                 </table>
             </div>
 
-            {{ $files->withQueryString()->links() }}
+            <!-- {{ $files->withQueryString()->links() }} -->
 
         </div>
     </div>
@@ -152,7 +164,7 @@ $(document).ready(function(){
 
   $('input[type="checkbox"][name="directories[]"]').click(function(){
     console.log('clicked');
-   
+
       var id = $(this).val();
 
         var checkedValues = $('input[type="checkbox"][name="directories[]"]:checked').map(function() {
@@ -161,7 +173,7 @@ $(document).ready(function(){
 
         var checkedValuesString = checkedValues.join(',');
         window.location.href = window.location.href.split('?')[0] + '?folder_id=' + checkedValuesString;
-    
+
   });
   $('#input-datalist').on('keyup',function(){
     var query = $(this).val();
@@ -187,11 +199,11 @@ $(document).ready(function(){
 });
 
 document.getElementById('SearchButton').addEventListener('click', function(event) {
-    
+
         window.location.href = '?search=' + $('#input-datalist').val(
-            
+
         );
-    
+
 });
 
 
@@ -202,4 +214,34 @@ document.getElementById('clearButton').addEventListener('click', function() {
     window.location.href = '?search=';
 });
 
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('dashboard.files.dataTable') }}",
+                data: function(d) {
+                    d.search = $('#input-datalist').val();
+                    d.folder_id = $('input[type="checkbox"][name="directories[]"]:checked').map(function() {
+                        return this.value;
+                    }).get().join(',');
+                }
+            },
+            columns: [
+                { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
+                { data: 'image', name: 'image' },
+                { data: 'title', name: 'client_original_name' },
+                { data: 'size', name: 'size' },
+                { data: 'view', name: 'view' },
+                { data: 'download', name: 'download' },
+                { data: 'link', name: 'link' },
+                { data: 'actions', name: 'actions', orderable: false, searchable: false }
+            ]
+        });
+
+        $('#showImage').change(function() {
+            var show = $(this).is(':checked');
+            $('#dataTable').DataTable().column(1).visible(show);
+        });
+    });
 </script>
