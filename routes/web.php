@@ -32,7 +32,7 @@ Route::group(
     function () {
         Route::get("/", DashboardController::class)->name("index");
 
-        Route::get("/xfiles/datatable", [
+        Route::post("/xfiles/datatable", [
             FilesController::class,
             "ajaxDataTable",
         ])->name("files.dataTable");

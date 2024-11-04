@@ -9,6 +9,7 @@ use App\Models\File;
 use App\Services\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
@@ -81,37 +82,37 @@ class FilesController extends Controller
     public function ajaxDataTable(Request $request)
     {
         $query = File::query()
-            ->where("user_id", Auth::id())
-            ->where(
-                "client_original_name",
-                "like",
-                "%" . $request->query("search") . "%"
-            )
-            ->orderBy("id", "desc");
+            ->where("user_id", Auth::id());
 
         if ($request->folder_id) {
             $folderIds = explode(",", $request->folder_id);
             $query->whereIn("directory_id", $folderIds);
         }
 
-        if ($request->search) {
-            $query->where(
-                "client_original_name",
-                "LIKE",
-                "%" . $request->search . "%"
-            );
+        if ($request->has("order")) {
+            $orders = $request->input("order");
+            if (is_array($orders)) {
+                foreach ($orders as $order) {
+                    $column = $order["name"];
+                    if ($column === "size") {
+                        $query->orderBy("size", "desc");
+                    }
+                }
+            }
         }
 
         return DataTables::of($query)
             ->addColumn("checkbox", function ($file) {
                 return '<input type="checkbox" value="' . $file->id . '">';
             })
-            ->addColumn("image", function ($file) {
-                return '<img src="' .
-                    env("APP_URL") .
-                    "/download/" .
-                    $file->name .
-                    '" style="width: 50px; height: 50px;">';
+            ->addColumn("image", function ($file) use ($request) {
+                $image = sprintf('<img src="%s" style="width: 50px; height: 50px;" loading="lazy">', env("APP_URL") . "/download/" . $file->name);
+                $showImage = $request->input("showImage");
+                $showImage = is_string($showImage) ? strtolower($showImage) === "true" : (bool) $showImage;
+                if (!$showImage) {
+                    $image = "<span class='icon'><i class='fas fa-file'></i></span>";
+                }
+                return $image;
             })
             ->addColumn("title", function ($file) {
                 return '<a href="' .
@@ -134,11 +135,12 @@ class FilesController extends Controller
                 return '<a href="' . $url . '">' . $url . "</a>";
             })
             ->addColumn("actions", function ($file) {
-                return '<a href="' .
-                    env("APP_URL") .
-                    "/delete/" .
-                    $file->id .
-                    '" class="button is-small is-danger">Delete</a>';
+                $html = '';
+
+                $html .= view('livewire.dashboard.file-button', compact('file'))->render();
+                $html .= sprintf('<a href="%s" class="button is-small is-info">Delete</a>', env('APP_URL') . "/delete/" . $file->id);
+
+                return $html;
             })
             ->rawColumns(["checkbox", "image", "title", "link", "actions"])
             ->make(true);
