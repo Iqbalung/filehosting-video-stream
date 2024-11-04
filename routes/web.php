@@ -19,34 +19,60 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get("/", function () {
+    return view("welcome");
 });
 
+Route::group(
+    [
+        "middleware" => ["auth:sanctum", "verified"],
+        "as" => "dashboard.",
+        "prefix" => "/dashboard",
+    ],
+    function () {
+        Route::get("/", DashboardController::class)->name("index");
 
-Route::group([
-    'middleware' => ['auth:sanctum', 'verified'],
-    'as' => 'dashboard.',
-    'prefix' => '/dashboard'
-], function (){
-    Route::get('/', DashboardController::class)->name('index');
+        Route::post("/xfiles/datatable", [
+            FilesController::class,
+            "ajaxDataTable",
+        ])->name("files.dataTable");
 
-    Route::resource('/files', FilesController::class);
-    Route::resource('/register', FilesController::class);
-    Route::get('/directory', [DirectoryController::class, 'index'])->name('directory.index');
-    Route::post('/directory', [DirectoryController::class, 'store'])->name('directory.store');
-    Route::post('/directory/edit', [DirectoryController::class, 'edit'])->name('directory.edit');
-    Route::post('/directory/update', [DirectoryController::class, 'update'])->name('directory.update');
-    Route::delete('/directory/', [DirectoryController::class, 'delete'])->name('directory.delete');
-});
+        Route::resource("/files", FilesController::class);
+        Route::resource("/register", FilesController::class);
+        Route::get("/directory", [DirectoryController::class, "index"])->name(
+            "directory.index"
+        );
+        Route::post("/directory", [DirectoryController::class, "store"])->name(
+            "directory.store"
+        );
+        Route::post("/directory/edit", [
+            DirectoryController::class,
+            "edit",
+        ])->name("directory.edit");
+        Route::post("/directory/update", [
+            DirectoryController::class,
+            "update",
+        ])->name("directory.update");
+        Route::delete("/directory/", [
+            DirectoryController::class,
+            "delete",
+        ])->name("directory.delete");
+    }
+);
 
-Route::get('/embed/{code}', [EmbedController::class, 'show'])->name('embed-show');
-Route::get('/show/{code}', [ShowController::class, 'show'])->name('file-show');
-Route::get('/view/{code}', [ShowController::class, 'download'])->name('file-download');
-Route::get('/storage-url', StorageUrlController::class)->name('storage-url');
-Route::get('/register-new', [ShowController::class,'register_new'])->name('register-new');
-Route::get('/delete/{id}', [FilesController::class,'delete'])->name('delete');
-Route::get('/search', [FilesController::class,'search']);
+Route::get("/embed/{code}", [EmbedController::class, "show"])->name(
+    "embed-show"
+);
+Route::get("/show/{code}", [ShowController::class, "show"])->name("file-show");
+Route::get("/view/{code}", [ShowController::class, "download"])->name(
+    "file-download"
+);
+Route::get("/storage-url", StorageUrlController::class)->name("storage-url");
+Route::get("/register-new", [ShowController::class, "register_new"])->name(
+    "register-new"
+);
+Route::get("/delete/{id}", [FilesController::class, "delete"])->name("delete");
+Route::get("/search", [FilesController::class, "search"]);
 
 //
 //Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {

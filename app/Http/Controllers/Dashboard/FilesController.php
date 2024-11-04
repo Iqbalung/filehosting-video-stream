@@ -9,8 +9,10 @@ use App\Models\File;
 use App\Services\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Yajra\DataTables\Facades\DataTables;
 
 class FilesController extends Controller
 {
@@ -38,39 +40,110 @@ class FilesController extends Controller
         $directories = Directory::query();
         $files = File::query();
         $parrentDirectory = 0;
-        $directoryName = '...';
+        $directoryName = "...";
 
-        if ($request->has('folder_id') && $request->query('folder_id') != null) {
-            $directory = Directory::select('directory_parrent_id', 'name')
-                ->where('user_id', Auth::id())
-                ->where('id', $request->query('folder_id'))
+        if (
+            $request->has("folder_id") &&
+            $request->query("folder_id") != null
+        ) {
+            $directory = Directory::select("directory_parrent_id", "name")
+                ->where("user_id", Auth::id())
+                ->where("id", $request->query("folder_id"))
                 ->first();
 
             $directoryName = $directory->name;
-            $parrentDirectory = $directory
-                ->directory_parrent_id;
+            $parrentDirectory = $directory->directory_parrent_id;
 
-            $folder_id = explode(',', $request->query('folder_id'));
-            $files = $files->whereIn('directory_id', $folder_id);
+            $folder_id = explode(",", $request->query("folder_id"));
+            $files = $files->whereIn("directory_id", $folder_id);
         } else {
-            $directories = $directories->where('directory_parrent_id', null);
+            $directories = $directories->where("directory_parrent_id", null);
         }
 
         $files = $files
-            ->where('user_id', Auth::id())
-            ->where('client_original_name', 'like', '%'. $request->query('search') .'%')
-            ->orderBy('id', 'desc');
+            ->where("user_id", Auth::id())
+            ->where(
+                "client_original_name",
+                "like",
+                "%" . $request->query("search") . "%"
+            )
+            ->orderBy("id", "desc");
 
-          
-            $files = $files->paginate(10);
+        $files = $files->paginate(10);
 
-        $directories = $directories
-            ->where('user_id', Auth::id())
-            ->get();
+        $directories = $directories->where("user_id", Auth::id())->get();
 
-        return view('dashboard.files.index', compact(
-            'directories', 'files', 'parrentDirectory', 'directoryName'
-        ));
+        return view(
+            "dashboard.files.index",
+            compact("directories", "files", "parrentDirectory", "directoryName")
+        );
+    }
+
+    public function ajaxDataTable(Request $request)
+    {
+        $query = File::query()
+            ->where("user_id", Auth::id());
+
+        if ($request->folder_id) {
+            $folderIds = explode(",", $request->folder_id);
+            $query->whereIn("directory_id", $folderIds);
+        }
+
+        if ($request->has("order")) {
+            $orders = $request->input("order");
+            if (is_array($orders)) {
+                foreach ($orders as $order) {
+                    $column = $order["name"];
+                    if ($column === "size") {
+                        $query->orderBy("size", "desc");
+                    }
+                }
+            }
+        }
+
+        return DataTables::of($query)
+            ->addColumn("checkbox", function ($file) {
+                return '<input type="checkbox" value="' . $file->id . '">';
+            })
+            ->addColumn("image", function ($file) use ($request) {
+                $image = sprintf('<img src="%s" style="width: 50px; height: 50px;" loading="lazy">', env("APP_URL") . "/download/" . $file->name);
+                $showImage = $request->input("showImage");
+                $showImage = is_string($showImage) ? strtolower($showImage) === "true" : (bool) $showImage;
+                if (!$showImage) {
+                    $image = "<span class='icon'><i class='fas fa-file'></i></span>";
+                }
+                return $image;
+            })
+            ->addColumn("title", function ($file) {
+                return '<a href="' .
+                    route("file-show", $file->code) .
+                    '">' .
+                    $file->client_original_name .
+                    "</a>";
+            })
+            ->addColumn("size", function ($file) {
+                return $file->size_format;
+            })
+            ->addColumn("view", function () {
+                return 0; // Example placeholder for "View" data
+            })
+            ->addColumn("download", function () {
+                return 0; // Example placeholder for "Download" data
+            })
+            ->addColumn("link", function ($file) {
+                $url = env("APP_URL") . "/download/" . $file->name;
+                return '<a href="' . $url . '">' . $url . "</a>";
+            })
+            ->addColumn("actions", function ($file) {
+                $html = '';
+
+                $html .= view('livewire.dashboard.file-button', compact('file'))->render();
+                $html .= sprintf('<a href="%s" class="button is-small is-info">Delete</a>', env('APP_URL') . "/delete/" . $file->id);
+
+                return $html;
+            })
+            ->rawColumns(["checkbox", "image", "title", "link", "actions"])
+            ->make(true);
     }
 
     /**
@@ -80,11 +153,11 @@ class FilesController extends Controller
      */
     public function create()
     {
-        $directories = Directory::with('childrenDirectory')
-            ->where('directory_parrent_id', null)
+        $directories = Directory::with("childrenDirectory")
+            ->where("directory_parrent_id", null)
             ->get();
 
-        return view('dashboard.files.create', compact('directories'));
+        return view("dashboard.files.create", compact("directories"));
     }
 
     /**
@@ -96,18 +169,21 @@ class FilesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'video' => 'required',
-            'directory_id' => 'nullable'
+            "video" => "required",
+            "directory_id" => "nullable",
         ]);
 
-        $directoryID = Directory::where('user_id', Auth::id())->find($request->directory_id)->id ?? null;
+        $directoryID =
+            Directory::where("user_id", Auth::id())->find(
+                $request->directory_id
+            )->id ?? null;
 
         $fileDatabase = $this->fileService->store($request, $directoryID);
 
         return redirect()
-            ->route('dashboard.files.index')
-            ->with('success', 'Berhasil di upload')
-            ->with('file', $fileDatabase);
+            ->route("dashboard.files.index")
+            ->with("success", "Berhasil di upload")
+            ->with("file", $fileDatabase);
     }
 
     /**
@@ -152,32 +228,45 @@ class FilesController extends Controller
      */
     public function delete($id)
     {
-        $id = explode(',', $id);
-        File::whereIn('id',$id)->delete();
+        $id = explode(",", $id);
+        File::whereIn("id", $id)->delete();
         return redirect()
-            ->route('dashboard.files.index')
-            ->with('success', 'Berhasil Hapus');
+            ->route("dashboard.files.index")
+            ->with("success", "Berhasil Hapus");
     }
 
     public function search(Request $request)
     {
-        $search = $request->get('query');
-        if(!empty($request->get('folder_id') != null))
-        {
-            $folder_id = explode(',', $request->get('folder_id'));
-            $files = $files = File::where('client_original_name', 'like', '%' . $search . '%')->whereIn('directory_id', $folder_id)->get()->take(10);
-        }else{
-            $files = File::where('client_original_name', 'like', '%' . $search . '%')->OrWhere('code', 'like', '%' . $search . '%')->get()->take(10);
+        $search = $request->get("query");
+        if (!empty($request->get("folder_id") != null)) {
+            $folder_id = explode(",", $request->get("folder_id"));
+            $files = $files = File::where(
+                "client_original_name",
+                "like",
+                "%" . $search . "%"
+            )
+                ->whereIn("directory_id", $folder_id)
+                ->get()
+                ->take(10);
+        } else {
+            $files = File::where(
+                "client_original_name",
+                "like",
+                "%" . $search . "%"
+            )
+                ->OrWhere("code", "like", "%" . $search . "%")
+                ->get()
+                ->take(10);
         }
         $output = '<datalist id="list-timezone" >';
-        foreach($files as $file)
-        {
-            $output .= ' <option style="width:700px;">'.$file->client_original_name.'</option>';
+        foreach ($files as $file) {
+            $output .=
+                ' <option style="width:700px;">' .
+                $file->client_original_name .
+                "</option>";
         }
-        $output .= '</datalist>';
+        $output .= "</datalist>";
 
         return $output;
     }
 }
-
-
